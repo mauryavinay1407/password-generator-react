@@ -1,5 +1,4 @@
-import React, { useCallback, useEffect, useState ,useRef} from "react";
-
+import React, { useEffect, useState, useRef } from "react";
 
 const svg = (
   <svg
@@ -8,7 +7,7 @@ const svg = (
     viewBox="0 0 24 24"
     strokeWidth={1.5}
     stroke="currentColor"
-    className="w-6 h-6"
+    className="w-8 h-8"
   >
     <path
       strokeLinecap="round"
@@ -17,66 +16,84 @@ const svg = (
     />
   </svg>
 );
- 
-
-
-
-
 
 const Container = () => {
-  const [password,setPassword]=useState("")
-  const [size,setSize]=useState('6');
-  const [numbers,setNumbers]=useState(false);
-  const [chars,setChars]=useState(false);
+  const [password, setPassword] = useState("");
+  const [size, setSize] = useState("6");
+  const [numbers, setNumbers] = useState(false);
+  const [chars, setChars] = useState(false);
 
-  const passwordRef=useRef(null);
+  const passwordRef = useRef(null);
 
-  const copyPassword=useCallback(()=>{
-    passwordRef.current?.select();
-    passwordRef.current?.setSelectionRange(0,999);
-    window.navigator.clipboard.writeText(password)
-  },[password])
-  
+  const copyPassword = (event) => {
+    event.preventDefault();
+    navigator.clipboard.writeText(password);
+    alert("Password copied to clipboard!");
+  };
 
- useEffect(()=>{
-  const alphabets="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-  const nums="0123456789";
-  const Ch="~!@#$%^&*()_+=/?";
-  let sets=alphabets;
-  let tempPassword="";
-  for(let i=1;i<=size;i++){
-   if(numbers)
-   sets+=nums;
-    if(chars)
-    sets+=Ch;
-    let temp=Math.floor(Math.random()*sets.length);
-    tempPassword+=sets[temp]
-  }
-  setPassword(tempPassword);
- },[numbers,chars,size])
+  useEffect(() => {
+    const alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    const nums = "0123456789";
+    const Ch = "~!@#$%^&*()_+=/?";
+    let sets = alphabets;
+    let tempPassword = "";
+    for (let i = 1; i <= size; i++) {
+      if (numbers) sets += nums;
+      if (chars) sets += Ch;
+      let temp = Math.floor(Math.random() * sets.length);
+      tempPassword += sets[temp];
+    }
+    setPassword(tempPassword);
+  }, [numbers, chars, size]);
 
   return (
-    <div className="h-32 w-96 shadow-lg text-red-700 rounded-md bg-gray-700 text-center m-6  border-2 border-red-700 hover:-translate-y-1 scale-110 duration-100 cursor-pointer hover:bg-gray-500">
-        <div className="flex  mt-10 ml-14">
-        <div><input className="rounded-l-lg w-64 h-6 p-4 text-sm outline-none"type="text"  value={password} readOnly placeholder="Password" ref={passwordRef}/></div>
-        <div className="w-8 h-8 rounded-r-lg bg-blue-800 cursor-pointer hover:bg-white">
-            <button onClick={copyPassword}>
-            {svg}
-            </button>
-            </div>
+    <div className="h-auto w-full md:w-2/3 lg:w-1/2 xl:w-1/3 shadow-lg text-red-700 rounded-md bg-gray-700 text-center p-6 m-6 border-2 border-red-700 hover:-translate-y-1 scale-110 duration-100 cursor-pointer hover:bg-gray-500">
+      <div className="flex items-center justify-center">
+        <input
+          className="rounded-l-lg w-full h-10 p-4 text-lg outline-none"
+          type="text"
+          value={password}
+          readOnly
+          placeholder="Password"
+          ref={passwordRef}
+        />
+        <div className="w-10 h-10 rounded-r-lg bg-blue-800 cursor-pointer hover:bg-white flex items-center justify-center">
+          <button onClick={copyPassword}>{svg}</button>
         </div>
-            <div className="mt-5 flex justify-center gap-x-2 text-red-950">
-              
-       <input  type="range" min={6} max={100} className="cursor-pointer" value={size} onChange={(e)=>setSize(e.target.value)} ref={passwordRef}/>Size({size})
-            
-       <input type="checkbox" defaultChecked={numbers} id="numberInput" onChange={()=>setNumbers(!numbers)}/><label htmlFor="numberInput">Numbers</label>
-             
-       <input type="checkbox" defaultChecked={chars} id="charInput" onChange={()=>setChars(!chars)}/> <label htmlFor="charInput">Chars</label>
-            </div>
-      
+      </div>
+      <div className="mt-5 flex flex-wrap justify-center gap-2 text-red-950">
+        <div>
+          <input
+            type="range"
+            min={6}
+            max={100}
+            className="cursor-pointer"
+            value={size}
+            onChange={(e) => setSize(e.target.value)}
+          />
+          Size({size})
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            defaultChecked={numbers}
+            id="numberInput"
+            onChange={() => setNumbers(!numbers)}
+          />
+          <label htmlFor="numberInput">Numbers</label>
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            defaultChecked={chars}
+            id="charInput"
+            onChange={() => setChars(!chars)}
+          />
+          <label htmlFor="charInput">Chars</label>
+        </div>
+      </div>
     </div>
   );
 };
 
 export default Container;
-
