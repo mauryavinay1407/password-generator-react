@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import toast from 'react-hot-toast';
 
 const svg = (
   <svg
@@ -28,7 +29,7 @@ const Container = () => {
   const copyPassword = (event) => {
     event.preventDefault();
     navigator.clipboard.writeText(password);
-    alert("Password copied to clipboard!");
+    toast.success("Password copied to clipboard!");
   };
 
   useEffect(() => {
